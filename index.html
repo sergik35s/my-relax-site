@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой успокаивающий сайт</title>
+    <style>
+        /* === ПЕРЕМЕННЫЕ ДЛЯ СМЕНЫ ТЕМ === */
+        :root {
+            --bg-color: #f4f8fc;
+            --text-color: #1a365d;
+            --box-bg: #e6f0fa;
+            --box-border: #cfe2f3;
+            --screen-bg: #ffffff;
+            --btn-bg: #bcd4f5;
+            --btn-text: #1a3b68;
+            --btn-hover: #9cbff2;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121824;
+            --text-color: #e2e8f0;
+            --box-bg: #1e293b;
+            --box-border: #334155;
+            --screen-bg: #0f172a;
+            --btn-bg: #475569;
+            --btn-text: #f1f5f9;
+            --btn-hover: #64748b;
+        }
+
+        /* === ГЛАВНЫЕ СТИЛИ СТРАНИЦЫ === */
+        html, body {
+            margin: 0 !important; padding: 0 !important; width: 100% !important;
+            background-color: var(--bg-color) !important; font-family: sans-serif !important;
+            display: flex !important; flex-direction: column !important; align-items: center !important;
+            transition: background-color 0.3s ease !important;
+        }
+        .page-wrapper {
+            width: 100% !important; max-width: 450px !important; padding: 20px !important;
+            display: flex !important; flex-direction: column !important; align-items: center !important; box-sizing: border-box !important;
+        }
+        .info-block { text-align: center !important; margin-bottom: 25px !important; width: 100% !important; }
+        .info-block h1 { color: var(--text-color) !important; margin: 10px 0 !important; transition: color 0.3s; }
+        .info-block h2 { color: var(--text-color) !important; margin: 10px 0 !important; font-size: 16px; font-weight: normal; opacity: 0.8; transition: color 0.3s; }
+        .info-block img { width: 100% !important; max-width: 250px !important; height: auto !important; border-radius: 12px !important; margin: 15px auto !important; display: block !important; box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important; }
+        
+        .game-box { 
+            width: 240px !important; margin: 15px auto !important; padding: 15px !important; 
+            background-color: var(--box-bg) !important; border-radius: 12px !important; 
+            box-shadow: 0 4px 15px rgba(0, 50, 100, 0.05) !important; 
+            border: 1px solid var(--box-border) !important; box-sizing: border-box !important;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        /* СТИЛИ АТМОСФЕРНОГО БЛОКА */
+        .atmosphere-controls {
+            display: flex !important;
+            gap: 10px !important;
+            justify-content: space-between !important;
+        }
+        .atmo-btn {
+            flex: 1 !important;
+            padding: 10px !important;
+            font-size: 14px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            border: none !important;
+            border-radius: 8px !important;
+            background-color: #3b82f6 !important;
+            color: white !important;
+            transition: background-color 0.2s;
+        }
+        .atmo-btn:hover { background-color: #1d4ed8 !important; }
+
+        /* КАЛЬКУЛЯТОР */
+        #calc-screen { width: 100% !important; height: 45px !important; text-align: right !important; margin-bottom: 12px !important; font-size: 20px !important; box-sizing: border-box !important; background-color: var(--screen-bg) !important; color: var(--text-color) !important; border: 1px solid var(--box-border) !important; padding: 10px !important; border-radius: 6px !important; transition: background-color 0.3s, color 0.3s; }
+        .calc-buttons { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; }
+        .calc-buttons button { height: 40px !important; font-size: 16px !important; cursor: pointer !important; border: none !important; border-radius: 6px !important; background-color: var(--btn-bg) !important; color: var(--btn-text) !important; font-weight: 500 !important; transition: background-color 0.3s, color 0.3s; }
+        .calc-buttons button:hover { background-color: var(--btn-hover) !important; }
+        .calc-buttons button:nth-child(1), .calc-buttons button:nth-child(12) { background-color: #3b82f6 !important; color: #ffffff !important; }
+        
+        /* КЛИКЕР И ПУЗЫРИ */
+        .clicker-score, .pop-title { font-size: 18px !important; margin-bottom: 12px !important; font-weight: bold !important; text-align: center !important; color: var(--text-color) !important; }
+        .clicker-btn { width: 90px !important; height: 90px !important; border-radius: 50% !important; border: none !important; background-color: #3b82f6 !important; color: white !important; font-size: 16px !important; font-weight: bold !important; cursor: pointer !important; display: block !important; margin: 0 auto !important; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4) !important; }
+        .bubble-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 10px !important; margin-bottom: 15px !important; }
+        .bubble { width: 40px !important; height: 40px !important; background: radial-gradient(circle at 30% 30%, #93c5fd, #3b82f6) !important; border-radius: 50% !important; cursor: pointer !important; box-shadow: inset -2px -2px 6px rgba(0,0,0,0.2), 2px 4px 8px rgba(59,130,246,0.3) !important; }
+        .bubble.popped { background: #cbd5e1 !important; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important; transform: scale(0.85) !important; cursor: default !important; }
+        .pop-reset { width: 100% !important; padding: 8px !important; font-size: 14px !important; font-weight: bold !important; cursor: pointer !important; border: none !important; border-radius: 6px !important; background-color: #3b82f6 !important; color: white !important; }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- КОТИК -->
+        <div class="info-block">
+            <h1>"Мой сайт"</h1>
+            <h2>"Мой сайт" создан для успокоения и небольших игр</h2>
+            <img src="c420988fd156fe0ed3258cc8a0fdf0b2.jpg" alt="Котик">
+        </div>
+
+        <!-- АТМОСФЕРА: МУРЧАНИЕ И СМЕНА ТЕМЫ -->
+        <div class="game-box">
+            <div class="atmosphere-controls">
+                <button class="atmo-btn" id="purr-btn" onclick="togglePurr()">🐾 Мурчать</button>
+                <button class="atmo-btn" id="theme-btn" onclick="toggleTheme()">🌙 Ночь</button>
+            </div>
+        </div>
+
+        <!-- КАЛЬКУЛЯТОР -->
+        <div class="game-box">
+            <input type="text" id="calc-screen" readonly placeholder="0">
+            <div class="calc-buttons">
+                <button onclick="press('C')">C</button>
+                <button onclick="press('/')">/</button>
+                <button onclick="press('*')">*</button>
+                <button onclick="press('-')">-</button>
+                <button onclick="press('7')">7</button>
+                <button onclick="press('8')">8</button>
+                <button onclick="press('9')">9</button>
+                <button onclick="press('+')">+</button>
+                <button onclick="press('4')">4</button>
+                <button onclick="press('5')">5</button>
+                <button onclick="press('6')">6</button>
+                <button onclick="press('=')">=</button>
+                <button onclick="press('1')">1</button>
+                <button onclick="press('2')">2</button>
+                <button onclick="press('3')">3</button>
+                <button onclick="press('0')">0</button>
+            </div>
+        </div>
+
+        <!-- КЛИКЕР -->
+        <div class="game-box">
+            <div class="clicker-score">Кликов: <span id="score">0</span></div>
+            <button class="clicker-btn" onclick="doClick()">Клик!</button>
+            <button class="pop-reset" onclick="resetClicks()" style="margin-top: 12px !important;">Сбросить счёт</button>
+        </div>
+
+        <!-- ПУЗЫРИ -->
+        <div class="game-box">
+            <div class="pop-title">Лопни пузыри: <span id="pop-count">0</span></div>
+            <div class="bubble-grid">
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+                <div class="bubble" onclick="popMe(this)"></div>
+            </div>
+            <button class="pop-reset" onclick="resetBubbles()">Надуть заново</button>
+        </div>
+    </div>
+
+    <!-- АУДИО ТЕГ С НАДЕЖНЫМ ЗВУКОМ МУРЧАНИЯ -->
+    <audio id="purr-audio" loop src="purr.mp3"></audio>
+
+
+    <script>
+        // --- КОД СМЕНЫ ТЕМЫ ---
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = document.getElementById('theme-btn');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeBtn.textContent = '🌙 Ночь';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️ День';
+            }
+        }
+
+        // --- КОД МУРЧАНИЯ ---
+        const audio = document.getElementById('purr-audio');
+        function togglePurr() {
+        const purrBtn = document.getElementById('purr-btn');
+        if (audio.paused) {
+            audio.play();
+            purrBtn.textContent = '⏸ Пауза';
+            purrBtn.style.backgroundColor = '#34c759';
+        } else {
+            audio.pause();
+            purrBtn.textContent = '🐾 Мурчать';
+            purrBtn.style.backgroundColor = '#3b82f6';
+        }
+}
+
+        // Код Калькулятора
+        const scr = document.getElementById('calc-screen');
+        function press(v) {
+            if (!scr) return;
+            if (v === 'C') scr.value = '';
+            else if (v === '=') {
+                try { scr.value = Function('"use strict"; return (' + scr.value + ')')(); } 
+                catch(e) { scr.value = 'Ошибка'; }
+            } else scr.value += v;
+        }
+
+        // Код Кликера
+        let clicks = 0;
+        function doClick() {
+            clicks++;
+            document.getElementById('score').textContent = clicks;
+        }
+        function resetClicks() {
+            clicks = 0;
+            document.getElementById('score').textContent = 0;
+        }
+
+
+        // Код Пузырей
+        let pops = 0;
+        function popMe(el) {
+            if (!el.classList.contains('popped')) {
+                el.classList.add('popped');
+                pops++;
+                document.getElementById('pop-count').textContent = pops;
+            }
+        }
+        function resetBubbles() {
+            document.querySelectorAll('.bubble').forEach(b => b.classList.remove('popped'));
+            pops = 0;
+            document.getElementById('pop-count').textContent = 0;
+        }
+    </script>
+</body>
+</html>
