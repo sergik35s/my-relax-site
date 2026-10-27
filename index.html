@@ -159,6 +159,8 @@
 
     <!-- АУДИО ТЕГ С НАДЕЖНЫМ ЗВУКОМ МУРЧАНИЯ -->
     <audio id="purr-audio" loop src="purr.mp3"></audio>
+    <audio id="pop-audio" src="pop.mp3"></audio>
+    <audio id="click-audio" src="click.mp3"></audio>
 
 
     <script>
@@ -178,17 +180,17 @@
         // --- КОД МУРЧАНИЯ ---
         const audio = document.getElementById('purr-audio');
         function togglePurr() {
-        const purrBtn = document.getElementById('purr-btn');
-        if (audio.paused) {
-            audio.play();
-            purrBtn.textContent = '⏸ Пауза';
-            purrBtn.style.backgroundColor = '#34c759';
-        } else {
-            audio.pause();
-            purrBtn.textContent = '🐾 Мурчать';
-            purrBtn.style.backgroundColor = '#3b82f6';
+            const purrBtn = document.getElementById('purr-btn');
+            if (audio.paused) {
+                audio.play();
+                purrBtn.textContent = '⏸ Пауза';
+                purrBtn.style.backgroundColor = '#34c759';
+            } else {
+                audio.pause();
+                purrBtn.textContent = '🐾 Мурчать';
+                purrBtn.style.backgroundColor = '#3b82f6';
+            }
         }
-}
 
         // Код Калькулятора
         const scr = document.getElementById('calc-screen');
@@ -203,24 +205,45 @@
 
         // Код Кликера
         let clicks = 0;
+
         function doClick() {
             clicks++;
             document.getElementById('score').textContent = clicks;
+
+            // Звук ищется и проигрывается прямо ВНУТРИ функции при каждом клике
+            const clickAudio = document.getElementById('click-audio');
+            if (clickAudio) {
+                clickAudio.currentTime = 0;
+                clickAudio.play();
+            }
         }
+
         function resetClicks() {
             clicks = 0;
             document.getElementById('score').textContent = 0;
+
+            // Добавляем звук и на кнопку сброса
+            const clickAudio = document.getElementById('click-audio');
+            if (clickAudio) {
+                clickAudio.currentTime = 0;
+                clickAudio.play();
+            }
         }
 
-
-        // Код Пузырей
+        // --- КОД ПУЗЫРЕЙ С ДОБАВЛЕННЫМ ЗВУКОМ ---
         let pops = 0;
+        const popAudio = document.getElementById('pop-audio');
         function popMe(el) {
             if (!el.classList.contains('popped')) {
                 el.classList.add('popped');
                 pops++;
                 document.getElementById('pop-count').textContent = pops;
-            }
+        // Проигрываем приятный щелчок
+        if (popAudio) {
+            popAudio.currentTime = 0; // Сбрасываем время назад, чтобы щелкало быстро
+            popAudio.play();
+        }
+        }
         }
         function resetBubbles() {
             document.querySelectorAll('.bubble').forEach(b => b.classList.remove('popped'));
